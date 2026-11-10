@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Secrets (never commit)
+.env
+*.key
+
+# Large / generated artifacts
+*.pt
+*.pth
+data/raw/
+data/large/
+
+# Reference paper PDF (link is in references/README.md instead)
+references/*.pdf

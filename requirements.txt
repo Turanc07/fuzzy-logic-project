@@ -1,0 +1,7 @@
+# Minimum versions; pin exact versions (pip freeze) once the environment is tested.
+numpy>=2.0
+pandas>=2.0
+torch>=2.2
+matplotlib>=3.8
+scikit-learn>=1.4
+jupyter>=1.0
