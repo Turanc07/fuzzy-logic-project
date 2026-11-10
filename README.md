@@ -1,6 +1,6 @@
 # Fuzzy Rule-Based Network — Reproduction and Extension
 
-> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 1 (makale analizi) tamamlandı**, uygulama henüz başlamadı.
+> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 2 (uygulama planı) tamamlandı**: [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md)
 
 ## Project Title
 Fuzzy Rule-Based Network (FRBN): Yorumlanabilir ve Modüler Bulanık Ağın Yeniden Gerçekleştirilmesi ve Geliştirilmesi
@@ -41,14 +41,19 @@ git clone <repo-url>
 cd fuzzy-logic-project
 python -m venv .venv
 .venv\Scripts\activate        # Windows  (Linux/macOS: source .venv/bin/activate)
+pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cpu
 pip install -r requirements.txt
 ```
 
 ## Requirements
-Bkz. [requirements.txt](requirements.txt). Test edildikten sonra kesin sürümler sabitlenecek.
+Python 3.14.5, PyTorch 2.15.0 (CPU). Sabitlenmiş sürümler: [requirements.txt](requirements.txt).
 
 ## How to Run
-_(Checkpoint 3'te eklenecek.)_
+```bash
+python -m src.data        # veri setlerini üretip özetini yazdırır
+python -m pytest -q       # testleri çalıştırır
+```
+_(Deney betikleri Checkpoint 3'te eklenecek.)_
 
 ## Reproduction Experiments
 | Deney | Makale sonucu | Bizim sonucumuz |
