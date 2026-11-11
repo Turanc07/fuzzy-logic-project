@@ -26,3 +26,6 @@ data/large/
 
 # Reference paper PDF (link is in references/README.md instead)
 references/*.pdf
+
+# Smoke-test outputs
+results/**/*_quick*

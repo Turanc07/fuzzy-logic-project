@@ -66,10 +66,12 @@ Python 3.14.5, PyTorch 2.15.0 (CPU). Sabitlenmiş sürümler: [requirements.txt]
 
 ## How to Run
 ```bash
-python -m src.data        # veri setlerini üretip özetini yazdırır
-python -m pytest -q       # testleri çalıştırır
+python -m src.data                         # veri setlerini üretip özetini yazdırır
+python -m pytest -q                        # testleri çalıştırır
+python -m experiments.baseline.e1_sinc     # E1: sinc, FN vs NN (~25 dk, CPU)
+python -m experiments.baseline.e2_trig     # E2: trigonometrik veri, [3,1,7] FN
 ```
-_(Deney betikleri Checkpoint 3'te eklenecek.)_
+Her betik `--quick` ile birkaç saniyelik bir deneme modunda da çalışır. Çıktılar `results/tables/` (CSV + Markdown özet) ve `results/figures/` (PNG) altına yazılır.
 
 ## Reproduction Experiments
 | Deney | Makale sonucu | Bizim sonucumuz |
@@ -91,5 +93,5 @@ _(Raporla birlikte doldurulacak.)_
 Bkz. [references/README.md](references/README.md).
 
 ## Code Provenance and AI Usage
-- `src/` altındaki kod aksi belirtilmedikçe öğrenci tarafından yazılmıştır. Resmi depodan alınan her parça dosya başında kaynak gösterilerek işaretlenecektir.
-- Üretken yapay zekâ araçlarının kullanımı raporun "Generative AI Usage Disclosure" bölümünde belirtilecektir.
+- `src/` ve `experiments/` altındaki kod bu proje kapsamında yazılmıştır; resmi depodan kod kopyalanmamıştır (resmi depo yalnızca makalede yazmayan ayrıntılar için referans olarak okunmuştur). Dışarıdan bir parça alınırsa dosya başında kaynak gösterilerek işaretlenecektir.
+- Kodun ve belgelerin hazırlanmasında üretken yapay zekâ desteği kullanılmıştır; ayrıntılar raporun "Generative AI Usage Disclosure" bölümünde beyan edilecektir.
