@@ -1,6 +1,6 @@
 # Fuzzy Rule-Based Network — Reproduction and Extension
 
-> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 3 sürüyor**: FN çekirdeği, NN baseline, Adam / LM / LM trust-region eğitimi ve 5-katlı CV hazır; deney betikleri sırada. [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md)
+> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 3 tamamlandı** (baseline sistem + E1/E1b/E2 deneyleri). [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md) · [Checkpoint 3](docs/checkpoint3_baseline_sonuclari.md)
 
 ## Project Title
 Fuzzy Rule-Based Network (FRBN): Yorumlanabilir ve Modüler Bulanık Ağın Yeniden Gerçekleştirilmesi ve Geliştirilmesi
@@ -70,15 +70,21 @@ python -m src.data                         # veri setlerini üretip özetini yaz
 python -m pytest -q                        # testleri çalıştırır
 python -m experiments.baseline.e1_sinc     # E1: sinc, FN vs NN (~25 dk, CPU)
 python -m experiments.baseline.e2_trig     # E2: trigonometrik veri, [3,1,7] FN
+python -m experiments.baseline.e1b_init_sensitivity   # E1b: 20 başlatma tohumu, yakınsama oranı
 ```
 Her betik `--quick` ile birkaç saniyelik bir deneme modunda da çalışır. Çıktılar `results/tables/` (CSV + Markdown özet) ve `results/figures/` (PNG) altına yazılır.
 
 ## Reproduction Experiments
-| Deney | Makale sonucu | Bizim sonucumuz |
+| Deney | Makale | Bizim |
 |---|---|---|
-| sinc, FN Gauss LM-TR (val. MSE, en iyi fold) | 6.20e-8 | — |
-| sinc, NN tanh BMA-LM-TR (val. MSE, ort.) | 2.33e-7 | — |
-| Trig [3,1,7], LM-TR (val. loss, en iyi fold) | 0.001259 | — |
+| sinc, FN Gauss LM-TR, val. MSE en iyi | 6.20e-8 | 1.05e-7 (E1), 1.79e-8 (E1b) |
+| sinc, FN Gauss LM-TR, yakınsama oranı | raporlanmamış | 9/20 başlatma (E1b) |
+| sinc, NN tanh LM-TR, val. MSE ort. | 2.82e-7 | 1.68e-7 |
+| sinc, FN Trap Adam, val. MSE ort. | 2.24e-3 | 1.86e-3 |
+| Trig `[3,1,7]`, LM-TR, val. MSE ort. | 1.09e-2 | 2.78e-2 |
+| Trig `[3,1,7]`, Adam, val. MSE ort. | 5.38e-2 | 1.99e-2 |
+
+Ayrıntılar, farklar ve olası nedenleri: [docs/checkpoint3_baseline_sonuclari.md](docs/checkpoint3_baseline_sonuclari.md).
 
 ## Proposed Extension
 _(Checkpoint 4'te belirlenecek; adaylar analiz belgesinde.)_
