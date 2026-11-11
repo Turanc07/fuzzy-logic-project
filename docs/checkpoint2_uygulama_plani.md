@@ -66,7 +66,7 @@ Not: Makale ve kod, Gauss sonuç katmanında yalnızca μ̂'yü kullanıyor (Den
 | sinc | `[1,1,20]` | Gauss / Trapezoid | 80 / 160 (makale 72 / 144 diyor, kontrol edilecek) |
 | trig | `[3,1,7]` | Trapezoid | 7·(3+1)·4 = **112** (Tablo 2 ile aynı) |
 | trig mimari araması (küçültülmüş) | 1–2 katman, 1–7 kural | Trapezoid | — |
-| ablation | `[3,1,10]` ve `[2,1,10]` | Gauss | 60 / 40 (makaledeki sayım) |
+| ablation | `[3,1,10]` ve `[2,1,10]` | Gauss | 80 / 60 (makale 60 / 40 diyor: sonuç MF'lerini saymamış) |
 
 Kural tabanı **veriden öğrenilir** (rastgele başlatma + optimizasyon). Kurallar eğitimden sonra dilsel etiketlere (Low/Mid/High) çevrilerek yorumlanacak.
 
@@ -86,6 +86,7 @@ Kural tabanı **veriden öğrenilir** (rastgele başlatma + optimizasyon). Kural
 
 - Jacobian: `torch.func.jacrev` + `vmap` ile örnek başına gradyan. Gerekirse veri alt kümesi kullanılır; sinc için 20k × 80 küçük bir matris.
 - Epoch: 100 (makale). Kayıp: MSE.
+- **Mini-batch (uygulama sırasında eklendi):** Eğitim kümesi her epoch'ta 10 parçaya bölünür ve her parçada bir optimizer adımı atılır. Böylece 100 epoch = 1000 adım olur. Resmi notebook da aynı oranı kullanıyor (200k veri / 20k batch). Full-batch ile 100 adım LM için yetersiz kaldı.
 - Trapezoid parametrelerindeki sıralama kısıtı her ileri geçişte uygulanır.
 
 **MRR önerisi:** FN (iki MF tipiyle) + Adam + LM trust-region + 2 deneyin tekrarı + yorumlanabilirlik metrikleri. BEA/BMA kapsamın dışında tutulup isteğe bağlı bırakılabilir; bu durum raporda gerekçelendirilecek.
@@ -120,6 +121,21 @@ Uygulamada hangisinin esas alındığı belirtilmiştir.
 | BMA hiperparametreleri (sinc) | N_ind=5, N_clones=3 | n_ind=10, n_clone=5 | Makale |
 | LM uygulaması | Algoritma 2 | Harici `torch-levenberg-marquardt` kütüphanesi | Kendi uygulamam (Denk. 15–19) |
 | Gauss sonuç σ̂ | Kullanılmıyor (Denk. 9) | Parametre olarak var, kullanılmıyor | Parametre sayımında ayrı belirtilecek |
+
+### 8.1 Uygulama sırasında elde edilen ön bulgular (Checkpoint 3b, tek fold, resmi deney değil)
+
+sinc, fold 0, 100 epoch, batch = eğitim kümesinin 1/10'u:
+
+| Model | Adam | LM | LM-TR | Makale LM-TR (ort.) |
+|---|---|---|---|---|
+| FN Gauss `[1,1,20]` | 5.5e-5 | 2.3e-3 | 2.0e-3 (tohum 0) | 8.07e-7 |
+| FN Trap `[1,1,20]` | 8.6e-4 | 1.8e-3 | 1.5e-3 | 8.33e-3 |
+| NN tanh 1×20 | 7.0e-3 | 2.0e-6 | **1.8e-7** | 2.82e-7 |
+| NN ReLU 1×20 | 3.3e-2 | 3.3e-2 | 4.0e-2 | 2.77e-3 |
+
+- **NN + LM-TR** makaleyle aynı mertebede. Bu, LM uygulamasının doğru çalıştığını gösteriyor.
+- **FN Gauss + LM-TR başlatmaya çok duyarlı.** Aynı fold'da 6 tohumla denendi: val MSE değerleri 1.95e-3, **1.79e-8**, 2.00e-3, **2.42e-7**, 7.14e-3, 2.85e-3. Yani 6'dan 2'si makaledeki seviyeye, hatta altına iniyor.
+- Resmi notebook her konfigürasyondan önce `set_seed(42)` çağırıyor; dolayısıyla **tüm fold'lar aynı başlatmayla** eğitiliyor ve makaledeki düşük std yalnızca veri bölmesinden kaynaklanan varyansı yansıtıyor. Bu yüzden E1 iki protokolle raporlanacak: (a) makale protokolü (sabit başlatma tohumu), (b) her fold'da farklı başlatma tohumu (sağlamlık). Bu durum Checkpoint 4 için güçlü bir katkı motivasyonu (ör. veri güdümlü ya da ızgara başlatma).
 
 ## 9. Riskler ve önlemler
 

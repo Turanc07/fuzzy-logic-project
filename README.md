@@ -1,6 +1,6 @@
 # Fuzzy Rule-Based Network — Reproduction and Extension
 
-> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 2 (uygulama planı) tamamlandı**: [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md)
+> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 3 sürüyor**: FN çekirdeği, NN baseline, Adam / LM / LM trust-region eğitimi ve 5-katlı CV hazır; deney betikleri sırada. [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md)
 
 ## Project Title
 Fuzzy Rule-Based Network (FRBN): Yorumlanabilir ve Modüler Bulanık Ağın Yeniden Gerçekleştirilmesi ve Geliştirilmesi
@@ -29,6 +29,22 @@ Derin sinir ağları doğru ama yorumlanamaz ("kara kutu"). Klasik bulanık sist
 
 ## Fuzzy System Architecture
 `x → [Fuzzy Layer 1] → … → [Fuzzy Layer L] → y` _(diyagram eklenecek: `results/figures/architecture.png`)_
+
+| Modül | Görev |
+|---|---|
+| [src/membership.py](src/membership.py) | Trapezoid (Denk. 2–3) ve Gauss (Denk. 7) üyelik fonksiyonları |
+| [src/fuzzy_layer.py](src/fuzzy_layer.py) | `FuzzyLayer [M,N,K]`: min t-norm, Center of Sums (Denk. 5–6), ağırlıklı ortalama (Denk. 9) |
+| [src/fuzzy_network.py](src/fuzzy_network.py) | `FuzzyNetwork`: katmanların zincirlenmesi (Denk. 10), parametre sayımı, kuralların yazdırılması |
+| [src/data.py](src/data.py) | sinc / trigonometrik veri üreticileri, 5-katlı bölme |
+| [src/nn_baseline.py](src/nn_baseline.py) | Karşılaştırma için tek gizli katmanlı MLP (1-20-1 = 61 parametre) |
+| [src/optim_lm.py](src/optim_lm.py) | Levenberg–Marquardt: standart ve trust-region sönümleme (Denk. 15–19) |
+| [src/train.py](src/train.py) | Eğitim döngüsü (Adam / LM / LM-TR), early stopping, 5-katlı CV, özet istatistikler |
+
+```python
+from src.fuzzy_network import FuzzyNetwork
+net = FuzzyNetwork([[3, 1, 7]], ante="trap", cons="trap", seed=0)
+print(net.summary()); print("\n".join(net.rules()))
+```
 
 ## Dataset
 - **sinc:** sentetik, 20.000 nokta (kodla üretilir).
