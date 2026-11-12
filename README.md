@@ -1,6 +1,6 @@
 # Fuzzy Rule-Based Network — Reproduction and Extension
 
-> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 3 tamamlandı** (baseline sistem + E1/E1b/E2 deneyleri). [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md) · [Checkpoint 3](docs/checkpoint3_baseline_sonuclari.md)
+> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 4 tamamlandı** (katkı önerisi + pilot). [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md) · [Checkpoint 3](docs/checkpoint3_baseline_sonuclari.md) · [Checkpoint 4](docs/checkpoint4_katki_onerisi.md)
 
 ## Project Title
 Fuzzy Rule-Based Network (FRBN): Yorumlanabilir ve Modüler Bulanık Ağın Yeniden Gerçekleştirilmesi ve Geliştirilmesi
@@ -87,7 +87,9 @@ Her betik `--quick` ile birkaç saniyelik bir deneme modunda da çalışır. Ç�
 Ayrıntılar, farklar ve olası nedenleri: [docs/checkpoint3_baseline_sonuclari.md](docs/checkpoint3_baseline_sonuclari.md).
 
 ## Proposed Extension
-_(Checkpoint 4'te belirlenecek; adaylar analiz belgesinde.)_
+**Kapsama-bilinçli (FCM tabanlı) kural başlatma.** Rastgele başlatma bazı bölgeleri kuralsız bırakıyor; o bölgelerde gradyan sıfır olduğundan optimizasyon bunu düzeltemiyor (sinc'te FN + LM-TR yalnızca 9/20 başlatmada yakınsıyor). Önerilen yöntem ilk katmanın kurallarını Fuzzy C-Means ile (giriş uzayında `fcm` ya da ürün uzayında `fcm_xy`) verinin üzerine yerleştiriyor; `lhs` kümeleme yapmayan bir kontrol yöntemi. Kod: [src/initialization.py](src/initialization.py) · Öneri ve pilot sonuçlar: [docs/checkpoint4_katki_onerisi.md](docs/checkpoint4_katki_onerisi.md)
+
+Pilot (fold 0, LM-TR): sinc'te yakınsama 3/8 (random) → 8/8 (fcm); trigonometrik veride medyan val. MSE 3.6e-2 (random) → 1.6e-3 (fcm_xy).
 
 ## Experimental Results
 _(Checkpoint 5'te eklenecek.)_
