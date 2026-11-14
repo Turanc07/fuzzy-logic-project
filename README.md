@@ -1,6 +1,6 @@
 # Fuzzy Rule-Based Network — Reproduction and Extension
 
-> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 4 tamamlandı** (katkı önerisi + pilot). [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md) · [Checkpoint 3](docs/checkpoint3_baseline_sonuclari.md) · [Checkpoint 4](docs/checkpoint4_katki_onerisi.md)
+> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 5 tamamlandı** (baseline ve önerilen yöntemin deneysel karşılaştırması). [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md) · [Checkpoint 3](docs/checkpoint3_baseline_sonuclari.md) · [Checkpoint 4](docs/checkpoint4_katki_onerisi.md) · [Checkpoint 5](docs/checkpoint5_deneysel_sonuclar.md)
 
 ## Project Title
 Fuzzy Rule-Based Network (FRBN): Yorumlanabilir ve Modüler Bulanık Ağın Yeniden Gerçekleştirilmesi ve Geliştirilmesi
@@ -92,7 +92,23 @@ Ayrıntılar, farklar ve olası nedenleri: [docs/checkpoint3_baseline_sonuclari.
 Pilot (fold 0, LM-TR): sinc'te yakınsama 3/8 (random) → 8/8 (fcm); trigonometrik veride medyan val. MSE 3.6e-2 (random) → 1.6e-3 (fcm_xy).
 
 ## Experimental Results
-_(Checkpoint 5'te eklenecek.)_
+| Performans ölçütü | Baseline (random) | Önerilen (fcm) | Değişim |
+|---|---|---|---|
+| sinc, LM-TR yakınsama oranı (20 başlatma) | 9/20 | **20/20** | +55 puan (Fisher p < 0.001) |
+| sinc, LM-TR medyan val. MSE | 1.98e-3 | **1.05e-7** | ~19.000× düşük (Wilcoxon p < 0.001) |
+| sinc, Gauss LM-TR 5-katlı CV | 3.24e-3 ± 6.2e-3 | **1.12e-7 ± 8.4e-8** | makale: 8.07e-7 ± 5.8e-7 |
+| trig, LM ort. val. MSE (10 çift) | 2.33e-2 | **6.20e-3** | 3.8× düşük (p = 0.014) |
+| trig, eğitim sonunda ölü kural | 1.0 | **0** | — |
+| toplam süre (başlatma + eğitim) | — | — | +%19–27 (FCM); lhs ile ihmal edilebilir |
+
+Kümeleme yapmayan `lhs` kontrolü çoğu durumda `fcm` kadar iyi. Kazancın asıl kaynağı **kapsama**. FCM'nin 3 boyutta bazı örnekleri kapsamaması, LM-TR'deki anlamsız sonucu açıklıyor. Ayrıntılar, istatistikler ve tartışma: [docs/checkpoint5_deneysel_sonuclar.md](docs/checkpoint5_deneysel_sonuclar.md) · tüm tablolar: [results/tables/p_summary.md](results/tables/p_summary.md)
+
+```bash
+python -m experiments.proposed.p1_convergence   # P1: 20 başlatma, yakınsama oranı (~30 dk)
+python -m experiments.proposed.p2_sinc_cv       # P2: sinc 5-katlı CV (~30 dk)
+python -m experiments.proposed.p3_trig_cv       # P3/P4: trig + yorumlanabilirlik (~20 dk)
+python -m experiments.proposed.p_analysis       # istatistik, tablolar, şekiller
+```
 
 ## Limitations
 _(Raporla birlikte doldurulacak.)_

@@ -32,7 +32,8 @@ from .train import train_model
 ROOT = Path(__file__).resolve().parents[1]
 TABLES = ROOT / "results" / "tables"
 FIGURES = ROOT / "results" / "figures"
-PROTOCOL_SEEDS = {"paper": lambda fold: 42, "varied": lambda fold: 100 + fold}
+PROTOCOL_SEEDS = {"paper": lambda fold: 42, "varied": lambda fold: 100 + fold,
+                  "varied_b": lambda fold: 200 + fold}   # second independent init per fold (more pairs for tests)
 
 
 @dataclass
@@ -46,6 +47,41 @@ class Config:
     patience: int | None = None
     paper: dict = field(default_factory=dict)   # {"val_mean":..., "val_std":..., "val_best":...}
     tags: dict = field(default_factory=dict)    # free columns copied into the tables
+    init: str = "random"                        # first-layer initialisation (src/initialization.py)
+    diagnostics: Callable[[nn.Module, torch.Tensor, torch.Tensor], dict] | None = None  # (model, x_tr, x_va) -> extra columns
+
+
+def run_one(cfg: Config, ds: Dataset, tr: np.ndarray, va: np.ndarray, init_seed: int,
+            train_seed: int) -> tuple[dict, "TrainResult", nn.Module]:
+    """Build, initialise, train and diagnose one model on one train/validation split."""
+    from .fuzzy_network import FuzzyNetwork
+    from .initialization import dead_rules, initialize, uncovered_fraction
+
+    tr_t, va_t = torch.as_tensor(tr), torch.as_tensor(va)
+    x_tr, y_tr, x_va, y_va = ds.x[tr_t], ds.y[tr_t], ds.x[va_t], ds.y[va_t]
+    torch.manual_seed(init_seed)
+    model = cfg.make_model(init_seed)
+    t0 = time.perf_counter()
+    if isinstance(model, FuzzyNetwork):
+        initialize(model, x_tr, y_tr, method=cfg.init, seed=init_seed)
+    init_time = time.perf_counter() - t0
+    extra: dict = {"init": cfg.init, "init_time_s": init_time}
+    if isinstance(model, FuzzyNetwork):
+        with torch.no_grad():
+            extra["init_val_mse"] = torch.mean((model(x_va) - y_va) ** 2).item()
+        extra["dead_rules_init"] = dead_rules(model, x_tr)
+    bs = int(np.ceil(len(tr) / cfg.batches_per_epoch))
+    res = train_model(model, x_tr, y_tr, x_va, y_va, optimizer=cfg.optimizer, epochs=cfg.epochs,
+                      batch_size=bs, lr=cfg.lr, seed=train_seed, patience=cfg.patience)
+    if isinstance(model, FuzzyNetwork):
+        extra["dead_rules_final"] = dead_rules(model, x_tr)
+        extra["uncovered_val"] = uncovered_fraction(model, x_va)
+    if cfg.diagnostics is not None:
+        extra.update(cfg.diagnostics(model, x_tr, x_va))
+    row = {"config": cfg.name, "optimizer": cfg.optimizer, **cfg.tags, "init_seed": init_seed,
+           "train_mse": res.train_mse, "val_mse": res.val_mse, "time_s": res.time_s,
+           "n_params": res.n_params, **extra}
+    return row, res, model
 
 
 def run_experiment(
@@ -66,18 +102,9 @@ def run_experiment(
     for proto in protocols:
         for cfg in configs:
             for f, (tr, va) in enumerate(folds):
-                tr_t, va_t = torch.as_tensor(tr), torch.as_tensor(va)
-                seed = PROTOCOL_SEEDS[proto](f)
-                torch.manual_seed(seed)
-                model = cfg.make_model(seed)
-                bs = int(np.ceil(len(tr) / cfg.batches_per_epoch))
-                res = train_model(model, ds.x[tr_t], ds.y[tr_t], ds.x[va_t], ds.y[va_t],
-                                  optimizer=cfg.optimizer, epochs=cfg.epochs, batch_size=bs,
-                                  lr=cfg.lr, seed=split_seed * 1000 + f, patience=cfg.patience)
-                fold_rows.append({"config": cfg.name, "protocol": proto, "fold": f, "init_seed": seed,
-                                  "optimizer": cfg.optimizer, **cfg.tags,
-                                  "train_mse": res.train_mse, "val_mse": res.val_mse,
-                                  "time_s": res.time_s, "n_params": res.n_params})
+                row, res, model = run_one(cfg, ds, tr, va, init_seed=PROTOCOL_SEEDS[proto](f),
+                                          train_seed=split_seed * 1000 + f)
+                fold_rows.append({"protocol": proto, "fold": f, **row})
                 for ep, (a, b) in enumerate(zip(res.history["train_mse"], res.history["val_mse"])):
                     curve_rows.append({"config": cfg.name, "protocol": proto, "fold": f,
                                        "epoch": ep + 1, "train_mse": a, "val_mse": b})
