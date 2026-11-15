@@ -6,3 +6,7 @@ pandas==3.1.1
 matplotlib==3.11.2
 scikit-learn==1.9.1
 pytest==9.2.0
+
+# Report build (python -m report.build_report; PDF checks)
+python-docx==1.2.0
+pymupdf==2.1

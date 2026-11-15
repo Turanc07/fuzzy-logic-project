@@ -29,3 +29,7 @@ references/*.pdf
 
 # Smoke-test outputs
 results/**/*_quick*
+
+# Word lock / temp files
+~$*
+*.pdf.new

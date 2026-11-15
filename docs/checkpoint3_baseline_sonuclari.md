@@ -56,7 +56,8 @@ Kaynak: `results/tables/e1_sinc_summary.md` · Şekiller: `e1_sinc_curves_fn.png
 - FN Gauss + Adam ve trapezoid konfigürasyonlarında makaleyle aynı ya da daha iyi değerler elde edildi.
 
 **Tekrarlanamayanlar / farklar**
-- *paper* protokolünde FN Gauss + LM/LM-TR 5 fold'un hepsinde ~4e-3'te takıldı. Bunun nedeni bizim seed 42'mizin (rastgele sayı akışı makaledekinden farklı) kötü bir başlatmaya denk gelmesi. `e1_sinc_preds_fn.png` şeklinde bu model ana tepeyi ve uçları doğru öğreniyor, ama x ≈ ±0.1–0.3 aralığındaki yan dalgalanmaları **tamamen kaçırıyor**. O bölgeyi kapsayan bir kural olmadığı için gradyan da yok.
+- *paper* protokolünde FN Gauss + LM/LM-TR 5 fold'un hepsinde ~4e-3'te takıldı. Bunun nedeni bizim seed 42'mizin (rastgele sayı akışı makaledekinden farklı) kötü bir başlatmaya denk gelmesi. `e1_sinc_preds_fn.png` şeklinde bu model ana tepeyi ve uçları doğru öğreniyor, ama x ≈ ±0.1–0.3 aralığındaki yan dalgalanmaları **tamamen kaçırıyor**.
+  - *Düzeltme (Final aşamasında yapılan kontrol):* Burada ilk olarak "o bölgeyi kapsayan kural yok" yazılmıştı; ancak model yeniden eğitilip ölçüldüğünde bunun **yanlış** olduğu görüldü. O bölgede kurallar ateşleniyor, fakat dalgalanmayı temsil edemeyecek kadar geniş: 0.1–0.3'te merkezi olan tek kuralın genişliği σ ≈ 1.1. Ayrıca 20 merkezden 3'ü veri aralığının dışında (≈ 1.07–1.10), 2'si aynı noktada (0.0). Asıl neden kuralların dengesiz dağılması ve LM'nin yerel bir yöntem olarak kuralları uzağa taşıyamaması. Sıfır gradyan mekanizması ise trigonometrik verideki ölü kurallar için geçerli.
 - Aynı konfigürasyon *varied* protokolde 5 fold'un 3–5'inde 10⁻⁶–10⁻⁷'ye iniyor. Yani makaledeki düşük std, **yalnızca tek bir (şanslı) başlatmanın** veri bölmesi varyansını yansıtıyor olabilir.
 
 ## 4. E1b — Başlatma duyarlılığı (yeni analiz)

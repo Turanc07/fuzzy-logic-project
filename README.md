@@ -1,6 +1,6 @@
 # Fuzzy Rule-Based Network — Reproduction and Extension
 
-> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 5 tamamlandı** (baseline ve önerilen yöntemin deneysel karşılaştırması). [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md) · [Checkpoint 3](docs/checkpoint3_baseline_sonuclari.md) · [Checkpoint 4](docs/checkpoint4_katki_onerisi.md) · [Checkpoint 5](docs/checkpoint5_deneysel_sonuclar.md)
+> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 1–5 ve teknik rapor tamamlandı**; sunum hazırlanıyor. **Rapor: [report/report.pdf](report/report.pdf)** · [Literatür](docs/literatur_taramasi.md) · [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md) · [Checkpoint 3](docs/checkpoint3_baseline_sonuclari.md) · [Checkpoint 4](docs/checkpoint4_katki_onerisi.md) · [Checkpoint 5](docs/checkpoint5_deneysel_sonuclar.md)
 
 ## Project Title
 Fuzzy Rule-Based Network (FRBN): Yorumlanabilir ve Modüler Bulanık Ağın Yeniden Gerçekleştirilmesi ve Geliştirilmesi
@@ -28,7 +28,7 @@ Derin sinir ağları doğru ama yorumlanamaz ("kara kutu"). Klasik bulanık sist
 - Eğitim: Adam, Levenberg–Marquardt (trust region), BEA/BMA.
 
 ## Fuzzy System Architecture
-`x → [Fuzzy Layer 1] → … → [Fuzzy Layer L] → y` _(diyagram eklenecek: `results/figures/architecture.png`)_
+![FRBN mimarisi](results/figures/arch.png)
 
 | Modül | Görev |
 |---|---|
@@ -39,6 +39,8 @@ Derin sinir ağları doğru ama yorumlanamaz ("kara kutu"). Klasik bulanık sist
 | [src/nn_baseline.py](src/nn_baseline.py) | Karşılaştırma için tek gizli katmanlı MLP (1-20-1 = 61 parametre) |
 | [src/optim_lm.py](src/optim_lm.py) | Levenberg–Marquardt: standart ve trust-region sönümleme (Denk. 15–19) |
 | [src/train.py](src/train.py) | Eğitim döngüsü (Adam / LM / LM-TR), early stopping, 5-katlı CV, özet istatistikler |
+| [src/initialization.py](src/initialization.py) | **Önerilen katkı:** FCM / kantil ızgarası tabanlı kapsama-bilinçli kural başlatma, ölü kural ve kapsama tanılaması |
+| [src/experiment.py](src/experiment.py) | Deney altyapısı: CV, başlatma protokolleri, tablo ve grafik üretimi |
 
 ```python
 from src.fuzzy_network import FuzzyNetwork
@@ -87,7 +89,7 @@ Her betik `--quick` ile birkaç saniyelik bir deneme modunda da çalışır. Ç�
 Ayrıntılar, farklar ve olası nedenleri: [docs/checkpoint3_baseline_sonuclari.md](docs/checkpoint3_baseline_sonuclari.md).
 
 ## Proposed Extension
-**Kapsama-bilinçli (FCM tabanlı) kural başlatma.** Rastgele başlatma bazı bölgeleri kuralsız bırakıyor; o bölgelerde gradyan sıfır olduğundan optimizasyon bunu düzeltemiyor (sinc'te FN + LM-TR yalnızca 9/20 başlatmada yakınsıyor). Önerilen yöntem ilk katmanın kurallarını Fuzzy C-Means ile (giriş uzayında `fcm` ya da ürün uzayında `fcm_xy`) verinin üzerine yerleştiriyor; `lhs` kümeleme yapmayan bir kontrol yöntemi. Kod: [src/initialization.py](src/initialization.py) · Öneri ve pilot sonuçlar: [docs/checkpoint4_katki_onerisi.md](docs/checkpoint4_katki_onerisi.md)
+**Kapsama-bilinçli (FCM tabanlı) kural başlatma.** Rastgele başlatma kuralları veri üzerine dengesiz dağıtıyor: bazıları aralık dışında kalıyor, bazıları üst üste yığılıyor, bazıları hiç ateşlenmiyor (ölü kural; gradyanı sıfır). Yerel bir yöntem olan LM bunu düzeltemiyor (sinc'te FN + LM-TR yalnızca 9/20 başlatmada yakınsıyor). Önerilen yöntem ilk katmanın kurallarını Fuzzy C-Means ile (giriş uzayında `fcm` ya da ürün uzayında `fcm_xy`) verinin üzerine yerleştiriyor; `lhs` kümeleme yapmayan bir kontrol yöntemi. Kod: [src/initialization.py](src/initialization.py) · Öneri ve pilot sonuçlar: [docs/checkpoint4_katki_onerisi.md](docs/checkpoint4_katki_onerisi.md)
 
 Pilot (fold 0, LM-TR): sinc'te yakınsama 3/8 (random) → 8/8 (fcm); trigonometrik veride medyan val. MSE 3.6e-2 (random) → 1.6e-3 (fcm_xy).
 
@@ -108,10 +110,27 @@ python -m experiments.proposed.p1_convergence   # P1: 20 başlatma, yakınsama o
 python -m experiments.proposed.p2_sinc_cv       # P2: sinc 5-katlı CV (~30 dk)
 python -m experiments.proposed.p3_trig_cv       # P3/P4: trig + yorumlanabilirlik (~20 dk)
 python -m experiments.proposed.p_analysis       # istatistik, tablolar, şekiller
+python -m experiments.proposed.p6_rules         # P6: eğitilmiş kuralların dilsel yorumu
+```
+
+**Kural yorumlama örneği (P6, trigonometrik veri, FCM başlatma):** eğitilmiş 7 kuralın 6'sı gerçek veriyle yön olarak tutarlı, ölü kural yok; ör. `EĞER x₂ Düşük VE x₃ Orta İSE y Düşük`. Tablo: [results/tables/p6_rules.csv](results/tables/p6_rules.csv)
+
+## Technical Report
+- PDF: [report/report.pdf](report/report.pdf) (11 sayfa; kaynakça hariç ~9,7 sayfa, IEEE kaynakça, 25 doğrulanmış kaynak)
+- Rapor betikle üretilir; tablolar doğrudan `results/tables/*.csv` dosyalarından okunur:
+```bash
+python -m report.make_figures      # mimari diyagramı + başlatma karşılaştırma şekli
+python -m report.build_report      # report/report.docx
+# PDF: report.docx'i Word'de açıp Farklı Kaydet > PDF (ya da report/export_pdf.ps1)
 ```
 
 ## Limitations
-_(Raporla birlikte doldurulacak.)_
+- Deneyler 1 ve 3 boyutlu sentetik verilerle sınırlı; makaledeki MEMS verisi ve yüksek boyutlu gerçek veri test edilmedi.
+- Bakteriyel memetik algoritma (BMA) kapsam dışında; Adam, LM ve LM-TR karşılaştırıldı.
+- Yalnızca tek katmanlı FN'ler denendi; çok katmanlı ağlarda yalnızca ilk katman veriden başlatılabiliyor.
+- FCM'nin genişlikleri 3 boyutta kapsamayı garanti etmiyor (trig'de doğrulama örneklerinin %6'sı kapsanmıyor).
+- Kısıtsız eğitimde sonuç kümeleri çıkış aralığının dışına taşabiliyor; kuralların sonuç etiketleri ancak yön olarak yorumlanabiliyor.
+- Trigonometrik verideki y normalizasyonu makalede belirtilmediği için o deneyin makaleyle mutlak karşılaştırması temkinli yorumlanmalı.
 
 ## References
 Bkz. [references/README.md](references/README.md).
