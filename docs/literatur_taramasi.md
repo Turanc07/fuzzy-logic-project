@@ -1,6 +1,6 @@
 # Literatür Taraması
 
-**Öğrenci:** Turan Çaldıran (1306220018) · **Makale No:** 44
+**Öğrenci:** Turan ÇALDIRAN (1306220018) · **Makale No:** 44
 
 Bu belge raporun *Related Work* bölümünün ve sunumdaki literatür slaytının temelidir. Tüm kaynakların künyeleri **Crossref / arXiv / PMLR kayıtlarından doğrulanmıştır** (tam liste: [references/README.md](../references/README.md)). Güncel çalışmaların özetleri yayıncı ya da arXiv özetlerinden alınmıştır; tam metinleri okunmamış olanlar yalnızca özet düzeyinde anılmıştır.
 

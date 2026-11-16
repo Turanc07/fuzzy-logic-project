@@ -1,6 +1,6 @@
 # Checkpoint 5 — Deneysel Sonuçlar: Baseline ve Önerilen Yöntem
 
-**Öğrenci:** Turan Çaldıran (1306220018) · **Makale No:** 44 · Önceki adım: [Checkpoint 4](checkpoint4_katki_onerisi.md)
+**Öğrenci:** Turan ÇALDIRAN (1306220018) · **Makale No:** 44 · Önceki adım: [Checkpoint 4](checkpoint4_katki_onerisi.md)
 
 Karşılaştırılan yöntemler ([src/initialization.py](../src/initialization.py)):
 - `random`: makaledeki rastgele başlatma (**baseline**)

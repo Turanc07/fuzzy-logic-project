@@ -1,6 +1,6 @@
 # Checkpoint 3 — Baseline Sistem ve İlk Deney Sonuçları
 
-**Öğrenci:** Turan Çaldıran (1306220018) · **Makale No:** 44 · Önceki adımlar: [Checkpoint 1](checkpoint1_makale_analizi.md) · [Checkpoint 2](checkpoint2_uygulama_plani.md)
+**Öğrenci:** Turan ÇALDIRAN (1306220018) · **Makale No:** 44 · Önceki adımlar: [Checkpoint 1](checkpoint1_makale_analizi.md) · [Checkpoint 2](checkpoint2_uygulama_plani.md)
 
 Bu belge, referans yöntemin (FRBN) yeniden gerçekleştirilmesini ve makaledeki iki temel deneyin tekrarını raporlar. Tüm sayılar `results/tables/` altındaki CSV dosyalarından alınmıştır; grafikler `results/figures/` altındadır.
 

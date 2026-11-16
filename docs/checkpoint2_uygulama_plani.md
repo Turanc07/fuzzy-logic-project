@@ -1,6 +1,6 @@
 # Checkpoint 2 — Uygulama Planı
 
-**Öğrenci:** Turan Çaldıran (1306220018) · **Makale No:** 44 · **Önceki adım:** [Checkpoint 1](checkpoint1_makale_analizi.md)
+**Öğrenci:** Turan ÇALDIRAN (1306220018) · **Makale No:** 44 · **Önceki adım:** [Checkpoint 1](checkpoint1_makale_analizi.md)
 
 Bu belge yeniden gerçekleştirmenin **nasıl** yapılacağını tanımlar: geliştirme ortamı, veri setleri, üyelik fonksiyonları, kural tabanı, eğitim, deney planı ve başarı ölçütleri.
 

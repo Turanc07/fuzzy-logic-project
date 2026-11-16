@@ -211,7 +211,7 @@ SUCC = 1e-5
 t = doc.add_paragraph(); t.alignment = WD_ALIGN_PARAGRAPH.CENTER
 r = t.add_run("Bulanık Kural Tabanlı Ağın (FRBN) Yeniden Gerçekleştirilmesi ve\nKapsama-Bilinçli Kural Başlatma ile Geliştirilmesi")
 r.bold = True; r.font.size = Pt(15); r.font.color.rgb = RGBColor(0x1F, 0x3A, 0x5F)
-P("Turan Çaldıran (1306220018) — Bulanık Mantık Dersi Dönem Projesi Teknik Raporu", align=WD_ALIGN_PARAGRAPH.CENTER, size=10.5)
+P("Turan ÇALDIRAN (1306220018) — Bulanık Mantık Dersi Dönem Projesi Teknik Raporu", align=WD_ALIGN_PARAGRAPH.CENTER, size=10.5)
 P("Referans makale (No. 44): Lukács vd., Scientific Reports 16, 34429 (2026) · Kod: github.com/Turanc07/fuzzy-logic-project",
   align=WD_ALIGN_PARAGRAPH.CENTER, size=9)
 
@@ -340,7 +340,11 @@ B(["**Üyelik fonksiyonları ve katman** (src/membership.py, src/fuzzy_layer.py)
    "küçük kareler problemini tam çözdüğü ve hatayı hiçbir adımda artırmadığı birim testleriyle doğrulanmıştır.",
    "**Karşılaştırma modeli** (src/nn_baseline.py): 1-20-1 MLP, makaledeki ile aynı 61 parametre.",
    "**Deney altyapısı** (src/experiment.py): 5-katlı çapraz doğrulama, iki başlatma protokolü, tablo ve grafik üretimi. Projede "
-   "toplam 47 birim testi bulunmaktadır."])
+   "toplam 47 birim testi bulunmaktadır.",
+   "**Farklı giriş değerleriyle test** (demo/frbn_demo.py): Eğitilmiş sistem, verilen herhangi bir girdi için üyelik derecelerini, "
+   "min t-norm ile ateşleme güçlerini, her kuralın payını ve durulaştırılmış çıktıyı gerçek değerle birlikte gösterir. Örneğin "
+   "trigonometrik modelde x = (0,2; 0,15; 0,5) için yalnızca iki kural ateşlenmekte, çıktı 0,132 ve gerçek değer 0,096 olmaktadır; "
+   "veri aralığı dışındaki bir girdide (x = (5; 5; 5)) hiçbir kural ateşlenmemekte ve çıktı 0'a düşmektedir."])
 P("Makale ile resmi kod arasında bazı farklar bulunmuş ve makale esas alınmıştır: sinc için 20.000 nokta (notebook 200.000 kullanıyor) "
   "ve 5-katlı çapraz doğrulama (yayımlanan notebook'ta yok). Ayrıca makalede bazı tutarsızlıklar tespit edilmiştir: Tablo 1(a)'nın "
   "başlığı \"NN\" dediği halde FN sonuçlarını içermekte; ablation modeli için 40 parametre verilmekte (doğrusu 60, sonuç kümeleri "
@@ -592,8 +596,15 @@ P("Bu projede Anthropic'in Claude modeli (Claude Code aracılığıyla) aşağı
   "yazılması, makalenin ve resmi kodun incelenmesi ile literatür kaynaklarının bulunması. Tüm akademik kaynakların künyeleri DOI "
   "kayıtlarından (Crossref), arXiv'den veya yayıncı sayfasından doğrulanmış; doğrulanamayan bir aday kaynak kullanılmamıştır. "
   "Raporlanan bütün sayılar repodaki deney betiklerinin ürettiği sonuç dosyalarından alınmıştır ve tekrar üretilebilir.")
-P("[Öğrenci tarafından doldurulacak: Kodu, deneyleri ve sonuçları nasıl incelediğinizi ve doğruladığınızı kendi cümlelerinizle "
-  "yazın. Bu paragrafı sildikten sonra raporu teslim edin.]", highlight=True)
+P("Yapay zekâ çıktıları doğrudan kabul edilmemiş, öğrenci tarafından incelenmiş ve doğrulanmıştır. Kodun tamamı satır satır "
+  "incelenmiş; her modülün (üyelik fonksiyonları, bulanık katman, Center of Sums durulaştırması, Levenberg–Marquardt optimizer'ı, "
+  "başlatma yöntemleri) görevi ve makaledeki karşılık gelen denklemi kontrol edilmiştir. Birim testleri ve deney betikleri öğrencinin "
+  "bilgisayarında çalıştırılmış, rapordaki tablo ve şekiller bu çalıştırmaların ürettiği sonuç dosyalarıyla ve referans makalenin "
+  "tablolarıyla karşılaştırılmıştır. Projenin kapsamı (MEMS veri setinin ve bakteriyel memetik algoritmanın kapsam dışı bırakılması), "
+  "katkının seçimi, raporun dili ve teslim edilen bütün dosyalar öğrenci tarafından belirlenmiş ve onaylanmıştır. Süreç boyunca "
+  "yapay zekâ çıktılarında bulunan hatalar düzeltilmiştir: ilgisiz bir makaleye çıkan bir DOI kaynakçadan çıkarılmış, sinc deneyindeki "
+  "başarısızlık için ilk ileri sürülen açıklama (\"kaçırılan bölgede hiçbir kural ateşlenmiyor\") ölçümle yanlışlanmış ve Bölüm 8.1'deki "
+  "biçimiyle düzeltilmiştir. Öğrenci, sunulan kodu, yöntemleri ve sonuçları açıklayabilecek düzeyde anladığını beyan eder.")
 
 # ================================================================= references
 H("Kaynaklar (References)")
@@ -605,7 +616,7 @@ for i, k in enumerate(ORDER, start=1):
     r = p.add_run(f"[{i}] {REFS[k]}"); r.font.size = Pt(9)
 
 unused = [k for k in REFS if k not in ORDER]
-doc.core_properties.author = "Turan Çaldıran"
+doc.core_properties.author = "Turan ÇALDIRAN"
 doc.core_properties.title = "FRBN: Yeniden Gerçekleştirme ve Kapsama-Bilinçli Kural Başlatma"
 # mark the file as a Word 2013+ document so Word does not open it in "Compatibility Mode"
 settings = doc.settings.element

@@ -1,6 +1,21 @@
 # Fuzzy Rule-Based Network — Reproduction and Extension
 
-> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 1–5 ve teknik rapor tamamlandı**; sunum hazırlanıyor. **Rapor: [report/report.pdf](report/report.pdf)** · [Literatür](docs/literatur_taramasi.md) · [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md) · [Checkpoint 3](docs/checkpoint3_baseline_sonuclari.md) · [Checkpoint 4](docs/checkpoint4_katki_onerisi.md) · [Checkpoint 5](docs/checkpoint5_deneysel_sonuclar.md)
+> Bulanık Mantık dersi dönem projesi. Durum: **Checkpoint 1–5, teknik rapor, sunum ve demo tamamlandı.** **Rapor: [report/report.pdf](report/report.pdf)** · **Sunum: [presentation/presentation.pdf](presentation/presentation.pdf)** · [Canlı demo](#live-demo) · [Savunma notları](docs/savunma_hazirlik.md) · [Literatür](docs/literatur_taramasi.md) · [Checkpoint 1](docs/checkpoint1_makale_analizi.md) · [Checkpoint 2](docs/checkpoint2_uygulama_plani.md) · [Checkpoint 3](docs/checkpoint3_baseline_sonuclari.md) · [Checkpoint 4](docs/checkpoint4_katki_onerisi.md) · [Checkpoint 5](docs/checkpoint5_deneysel_sonuclar.md)
+
+### Teslim çıktıları (yönerge §17)
+| Çıktı | Dosya |
+|---|---|
+| Bilimsel makale analizi | [docs/checkpoint1_makale_analizi.md](docs/checkpoint1_makale_analizi.md) |
+| Literatür araştırması | [docs/literatur_taramasi.md](docs/literatur_taramasi.md) · [references/README.md](references/README.md) |
+| Baseline uygulama | [src/](src/) · [experiments/baseline/](experiments/baseline/) · [docs/checkpoint3_baseline_sonuclari.md](docs/checkpoint3_baseline_sonuclari.md) |
+| Özgün katkı | [src/initialization.py](src/initialization.py) · [docs/checkpoint4_katki_onerisi.md](docs/checkpoint4_katki_onerisi.md) |
+| Deneysel karşılaştırma | [experiments/proposed/](experiments/proposed/) · [docs/checkpoint5_deneysel_sonuclar.md](docs/checkpoint5_deneysel_sonuclar.md) · [results/tables/p_summary.md](results/tables/p_summary.md) |
+| Grafik ve tablolar | [results/figures/](results/figures/) · [results/tables/](results/tables/) |
+| Teknik rapor | [report/report.pdf](report/report.pdf) |
+| Sunum | [presentation/presentation.pdf](presentation/presentation.pdf) |
+| GitHub repository | bu repo |
+| Canlı demo | [demo/frbn_demo.py](demo/frbn_demo.py) (bkz. [Live Demo](#live-demo)) |
+| Sözlü savunma hazırlığı | [docs/savunma_hazirlik.md](docs/savunma_hazirlik.md) |
 
 ## Project Title
 Fuzzy Rule-Based Network (FRBN): Yorumlanabilir ve Modüler Bulanık Ağın Yeniden Gerçekleştirilmesi ve Geliştirilmesi
@@ -8,7 +23,7 @@ Fuzzy Rule-Based Network (FRBN): Yorumlanabilir ve Modüler Bulanık Ağın Yeni
 ## Student Information
 | | |
 |---|---|
-| Ad Soyad | Turan Çaldıran |
+| Ad Soyad | Turan ÇALDIRAN |
 | Öğrenci No | 1306220018 |
 | Ders | Bulanık Mantık — Dönem Projesi |
 | Atanan makale | No. 44 |
@@ -25,7 +40,8 @@ Derin sinir ağları doğru ama yorumlanamaz ("kara kutu"). Klasik bulanık sist
 - Üyelik fonksiyonları: trapezoid (a,b,c,d) veya Gauss (μ,σ).
 - Kural aktivasyonu: min t-norm.
 - Durulaştırma: Mamdani + Center of Sums (trapezoid) / ağırlıklı merkez ortalaması (Gauss).
-- Eğitim: Adam, Levenberg–Marquardt (trust region), BEA/BMA.
+- Eğitim: Adam, Levenberg–Marquardt (standart ve trust-region). Makaledeki bakteriyel evrimsel/memetik algoritmalar (BEA/BMA) bu projede kapsam dışıdır.
+- **Katkı:** ilk katmanın kurallarının veriden (FCM ya da kantil ızgarası) yerleştirildiği kapsama-bilinçli başlatma.
 
 ## Fuzzy System Architecture
 ![FRBN mimarisi](results/figures/arch.png)
@@ -55,7 +71,7 @@ print(net.summary()); print("\n".join(net.rules()))
 
 ## Installation
 ```bash
-git clone <repo-url>
+git clone https://github.com/Turanc07/fuzzy-logic-project.git
 cd fuzzy-logic-project
 python -m venv .venv
 .venv\Scripts\activate        # Windows  (Linux/macOS: source .venv/bin/activate)
@@ -75,6 +91,17 @@ python -m experiments.baseline.e2_trig     # E2: trigonometrik veri, [3,1,7] FN
 python -m experiments.baseline.e1b_init_sensitivity   # E1b: 20 başlatma tohumu, yakınsama oranı
 ```
 Her betik `--quick` ile birkaç saniyelik bir deneme modunda da çalışır. Çıktılar `results/tables/` (CSV + Markdown özet) ve `results/figures/` (PNG) altına yazılır.
+
+### Tekrar üretme akışı (yönerge §11)
+| Adım | Komut | Süre (CPU) |
+|---|---|---|
+| 1. Repository'nin klonlanması | `git clone https://github.com/Turanc07/fuzzy-logic-project.git` | — |
+| 2. Bağımlılıkların kurulması | `pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cpu` ve `pip install -r requirements.txt` | ~2 dk |
+| 3. Baseline uygulamanın çalıştırılması | `python -m experiments.baseline.e1_sinc` · `python -m experiments.baseline.e2_trig` · `python -m experiments.baseline.e1b_init_sensitivity` | ~40 dk |
+| 4. Geliştirilen yöntemin çalıştırılması | `python -m experiments.proposed.p1_convergence` · `python -m experiments.proposed.p2_sinc_cv` · `python -m experiments.proposed.p3_trig_cv` · `python -m experiments.proposed.p6_rules` | ~80 dk |
+| 5. Deney sonuçlarının üretilmesi | `python -m experiments.proposed.p_analysis` (istatistik, tablolar, şekiller) · `python -m report.make_figures` · `python -m report.build_report` | ~1 dk |
+
+Doğrulama için önce `python -m pytest -q` (47 test) ve her betiğin `--quick` modu çalıştırılabilir. Tüm rastgelelik sabit tohumlarla kontrol edilir; veri setleri kodla üretilir ([data/README.md](data/README.md)). Gizli bilgi (API anahtarı, parola, token) kullanılmamaktadır.
 
 ## Reproduction Experiments
 | Deney | Makale | Bizim |
@@ -123,6 +150,19 @@ python -m report.make_figures      # mimari diyagramı + başlatma karşılaşt�
 python -m report.build_report      # report/report.docx
 # PDF: report.docx'i Word'de açıp Farklı Kaydet > PDF (ya da report/export_pdf.ps1)
 ```
+
+## Live Demo
+```bash
+python -m demo.frbn_demo compare                                        # aynı tohum: random ve FCM başlatma yan yana (sinc)
+python -m demo.frbn_demo rules   --task trig --init fcm                 # eğitilmiş kurallar, "EĞER … İSE …"
+python -m demo.frbn_demo predict --task trig --init fcm --x 0.2 0.15 0.5  # tek girdi için adım adım çıkarım
+python -m demo.frbn_demo predict --task sinc --init fcm --x 0.25
+```
+`predict` her kural için üyelik derecelerini, min t-norm ile ateşleme gücünü, kuralın payını ve durulaştırılmış çıktıyı gerçek değerle birlikte yazdırır. Modeller ilk çalıştırmada eğitilip `demo/models/` altında önbelleğe alınır.
+
+## Presentation
+- Sunum (14 slayt, konuşmacı notlarıyla): [presentation/presentation.pdf](presentation/presentation.pdf)
+- Savunma soru-cevap hazırlığı: [docs/savunma_hazirlik.md](docs/savunma_hazirlik.md)
 
 ## Limitations
 - Deneyler 1 ve 3 boyutlu sentetik verilerle sınırlı; makaledeki MEMS verisi ve yüksek boyutlu gerçek veri test edilmedi.

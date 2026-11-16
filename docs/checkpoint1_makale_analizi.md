@@ -1,6 +1,6 @@
 # Checkpoint 1 — Makale ve Problem Analizi
 
-**Öğrenci:** Turan Çaldıran (1306220018) · **Makale No:** 44
+**Öğrenci:** Turan ÇALDIRAN (1306220018) · **Makale No:** 44
 **Referans makale:** H.-I. Lukács, Á. Smidla, T. Fischl, J. Botzheim, "Fuzzy rule-based network: a fuzzy logic-based interpretable and modular machine learning model," *Scientific Reports*, vol. 16, Art. no. 34429, 2026, doi: 10.1038/s41598-026-63687-6.
 **Resmi kod:** https://github.com/hunorlukacs/Fuzzy-Network (PyTorch)
 

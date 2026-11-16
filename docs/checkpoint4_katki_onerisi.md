@@ -1,6 +1,6 @@
 # Checkpoint 4 — Katkı Önerisi: Kapsama-Bilinçli (FCM Tabanlı) Kural Başlatma
 
-**Öğrenci:** Turan Çaldıran (1306220018) · **Makale No:** 44 · Önceki adım: [Checkpoint 3](checkpoint3_baseline_sonuclari.md)
+**Öğrenci:** Turan ÇALDIRAN (1306220018) · **Makale No:** 44 · Önceki adım: [Checkpoint 3](checkpoint3_baseline_sonuclari.md)
 
 Yönerge §6.1'deki katkı türleri: *parametre/başlatma değişikliği*, *yeni deney senaryosu*, *robustness analizi*.
 
